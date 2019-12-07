@@ -15,16 +15,16 @@ class MyHomePage extends StatefulWidget {
 }
 
 class MyApp extends StatelessWidget {
-  // This widget is the root of your application.
+  // This widget is the root of the application.
   @override
   Widget build(BuildContext context) {
     return new MaterialApp(
-      title: 'P5 Demo',
+      title: 'Dijkstra\'s',
       theme: new ThemeData(
-        // This is the theme of your application.
+        // This is the theme of the application.
         primarySwatch: Colors.blue,
       ),
-      home: new MyHomePage(title: 'P5 Demo Home Page'),
+      home: new MyHomePage(title: 'Dijkstra\'s'),
     );
   }
 }
@@ -51,7 +51,7 @@ class _MyHomePageState extends State<MyHomePage> with SingleTickerProviderStateM
   @override
   Widget build(BuildContext context) {
     return new Scaffold(
-      appBar: new AppBar(title: new Text("P5 Draw!")),
+      appBar: new AppBar(title: new Text("Dijkstra\s Visualized!")),
       backgroundColor: const Color.fromRGBO(200, 200, 200, 1.0),
       body: new Center(
         child:new PWidget(sketch),

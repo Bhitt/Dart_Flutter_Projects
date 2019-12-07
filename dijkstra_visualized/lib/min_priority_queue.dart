@@ -32,13 +32,16 @@ class MinPriorityQueue<T> {
     //if there are existing elements
     Node<T> current = _head;
     for(int i=0;i<_numItems;i++){
-      if(newNode.getPriority() >= current.getPriority()){
+      //if the new distance is shorter
+      if(newNode.getPriority() <= current.getPriority()){
         //place node before current
         newNode.setNext(current);
         //check for first
-        if(current.getPrevious() == null) _head = newNode;
-        else{
+        if(current.getPrevious() == null) {
+          _head = newNode;
+        }else{
           current.getPrevious().setNext(newNode);
+          newNode.setPrevious(current.getPrevious());
         }
         current.setPrevious(newNode);
         break;
