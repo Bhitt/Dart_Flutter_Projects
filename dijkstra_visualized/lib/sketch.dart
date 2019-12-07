@@ -1,24 +1,15 @@
-// import 'dart:collection';
-
 import "package:p5/p5.dart";
 import "dart:math";
 import "dart:ui";
 
-// import "min_priority_queue.dart";
-// import "node.dart";
-
-
-var cols = 10;
-var rows = 10;
+var cols = 25;
+var rows = 25;
 List<List<Spot>> grid;
+Random rand = Random();
 
 class MySketch extends PPainter {
   Set<Spot> _q;
   List<Spot> solution;
-
-
-  var start;
-  var end;
   var w;
   var h;
 
@@ -27,7 +18,6 @@ class MySketch extends PPainter {
     fullScreen();
     width*=4;
     height*=4;
-
 
     //find size of width and height
     w = width / cols;
@@ -50,6 +40,10 @@ class MySketch extends PPainter {
          grid[i][j] = new Spot(i,j);
       }
     }
+
+    //make sure start and end are not walls
+    grid[0][0].wall = false;
+    grid[cols-1][rows-1].wall = false;
 
     //add each Spot's neighbors to it
     for(var i=0; i< cols; i++){
@@ -100,7 +94,7 @@ class MySketch extends PPainter {
 
       //for each neighbor of u that is still in Q
       for (Spot neighbor in u.neighbors) {
-        if(_q.contains(neighbor)){
+        if(_q.contains(neighbor) && !neighbor.wall){
           showGridSquare(neighbor, color(255,0,0));
           //find the edge length
           alt = u.distance + edgeLength(u, neighbor);
@@ -129,6 +123,7 @@ class MySketch extends PPainter {
       for(int i=solution.length-1;i>=0;i--){
         showGridSquare(solution[i], color(0,255,0));
       }
+      return;
     }
     //
   
@@ -136,6 +131,9 @@ class MySketch extends PPainter {
 
   void showGridSquare(Spot spot, Color c){
     fill(c);
+    if(spot.wall){
+      fill(color(0,0,0));
+    }
     noStroke();
     rect(spot.i*w, spot.j*h, w -1, h -1);
   }
@@ -155,6 +153,7 @@ class Spot{
   int distance;
   List<Spot> neighbors;
   Spot prev;
+  bool wall = false;
 
   //constructor
   Spot(var i, var j){
@@ -163,6 +162,9 @@ class Spot{
     distance = 5000;
     prev=null;
     neighbors = new List<Spot>();
+    if( rand.nextDouble() < 0.25){
+      this.wall = true;
+    }
   }
 
   //function to keep track of adjacent nodes
@@ -183,6 +185,7 @@ class Spot{
     if(j > 0){
       this.neighbors.add(grid[i][j-1]);
     }
+    //if diagonal moves are allowed
     if(i > 0 && j > 0){
       this.neighbors.add(grid[i-1][j-1]);
     }
@@ -195,17 +198,5 @@ class Spot{
     if(i < cols-1 && j < rows-1){
       this.neighbors.add(grid[i+1][j+1]);
     }
-
   }
-
-}
-
-class Vertex{
-  int i;
-  int j;
-  Vertex(int i, int j){
-    this.i = i;
-    this.j = j;
-  }
-
 }
