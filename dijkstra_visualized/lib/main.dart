@@ -55,7 +55,7 @@ class _MyHomePageState extends State<MyHomePage> with SingleTickerProviderStateM
   @override
   Widget build(BuildContext context) {
     return new Scaffold(
-      appBar: new AppBar(title: new Text("Dijkstra\s Visualized!")),
+      appBar: new AppBar(title: new Text("👏Di👏jk👏stra\s👏 Vi👏sua👏lized!👏")),
       backgroundColor: const Color.fromRGBO(200, 200, 200, 1.0),
       body: new Center(
         child:new PWidget(sketch), 
