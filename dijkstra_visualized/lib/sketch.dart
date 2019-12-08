@@ -1,11 +1,13 @@
-import "package:p5/p5.dart";
-import "dart:math";
-import "dart:ui";
+import "package:p5/p5.dart";  //p5 library for graphics
+import "dart:math"; //sqrt and pow
+import "dart:ui"; 
 
+//globals
 var cols = 25;
 var rows = 25;
 List<List<Spot>> grid;
 Random rand = Random();
+bool diagonal = true;
 
 class MySketch extends PPainter {
   Set<Spot> _q;
@@ -45,6 +47,13 @@ class MySketch extends PPainter {
     grid[0][0].wall = false;
     grid[cols-1][rows-1].wall = false;
 
+    //decide if diagonal moves are allowed
+    if(rand.nextDouble() <= 0.5){
+      diagonal = false;
+    } else {
+      diagonal = true;
+    }
+
     //add each Spot's neighbors to it
     for(var i=0; i< cols; i++){
       for(var j=0; j<rows; j++){
@@ -74,6 +83,7 @@ class MySketch extends PPainter {
     //clear with white for rendered frames
     background(color(0,0,0));
 
+    //show each grid square with black
     for(var i=0; i< cols; i++){
       for(var j=0; j<rows; j++){
          showGridSquare(grid[i][j], color(255,255,255));
@@ -121,14 +131,18 @@ class MySketch extends PPainter {
       }
       //output the final path
       for(int i=solution.length-1;i>=0;i--){
-        showGridSquare(solution[i], color(0,255,0));
+        //if diagonal is allowed color path green
+        if(diagonal){
+          showGridSquare(solution[i], color(0,255,0));
+        } else {
+          showGridSquare(solution[i], color(255,0,255));
+        }
       }
       return;
     }
-    //
-  
   }
 
+  //functions to show a Spot/Vertex in the grid
   void showGridSquare(Spot spot, Color c){
     fill(c);
     if(spot.wall){
@@ -138,14 +152,13 @@ class MySketch extends PPainter {
     rect(spot.i*w, spot.j*h, w -1, h -1);
   }
 
+  //find distance between two spots/vertex
   int edgeLength(Spot u, Spot v){
     return sqrt(pow(v.i - u.i, 2) +  pow(v.j - u.j, 2) * 1.0).round(); 
   }
-  
-
-
 }
 
+//Vertexs on the grid
 class Spot{
   //properties
   var i;
@@ -172,7 +185,7 @@ class Spot{
     //grab the coordinates for writability/readability
     var i = this.i;
     var j = this.j;
-    //add neighbors surrounding spot
+    //add neighbors surrounding spot (adjacent)
     if(i < cols-1){
       this.neighbors.add(grid[i+1][j]);
     }
@@ -185,18 +198,20 @@ class Spot{
     if(j > 0){
       this.neighbors.add(grid[i][j-1]);
     }
-    //if diagonal moves are allowed
-    if(i > 0 && j > 0){
-      this.neighbors.add(grid[i-1][j-1]);
-    }
-    if(i < cols-1 && j > 0){
-      this.neighbors.add(grid[i+1][j-1]);
-    }
-    if(i > 0 && j < rows-1){
-      this.neighbors.add(grid[i-1][j+1]);
-    }
-    if(i < cols-1 && j < rows-1){
-      this.neighbors.add(grid[i+1][j+1]);
+    //if diagonal moves are allowed, add those neighbors too
+    if(diagonal){
+      if(i > 0 && j > 0){
+        this.neighbors.add(grid[i-1][j-1]);
+      }
+      if(i < cols-1 && j > 0){
+        this.neighbors.add(grid[i+1][j-1]);
+      }
+      if(i > 0 && j < rows-1){
+        this.neighbors.add(grid[i-1][j+1]);
+      }
+      if(i < cols-1 && j < rows-1){
+        this.neighbors.add(grid[i+1][j+1]);
+      }
     }
   }
 }
